@@ -13,7 +13,8 @@ class Field {
     this.particles = []
     document.body.appendChild(this.canvas)
 
-    this.gravity = 1
+    this.gravity = -0.2
+    this.wind = 0.2
   }
 
   update(timestamp){
@@ -25,6 +26,7 @@ class Field {
   addParticle(particle) {
     particle.setContext(this.context)
     particle.setGravity(this.gravity)
+    particle.setWind(this.wind)
     this.particles.push(particle)
   }
 }
@@ -64,6 +66,10 @@ class Particle {
     this.force.y = gravity
   }
 
+  setWind(wind){
+    this.force.x = wind
+  }
+
   reset(){
     this.constructor()
   }
@@ -85,10 +91,16 @@ class Particle {
     this.position.x += this.velocity.x
     this.position.y += this.velocity.y
 
+    // wobbles
+    const radian = Math.PI / 180
+    const lifeRadians = (this.life) * radian * this.seed // add random so it appears at a random place in the sine curve
+    const horizontalMult = 0.5
+    const sinMult = 10
+    this.position.x += (horizontalMult * Math.sin(lifeRadians * sinMult))
 
     // draw
     this.context.fillStyle = 'black'
-    this.context.fillRect(this.position.x, -this.position.y, 5, 5)
+    this.context.fillRect(this.position.x, -this.position.y, 3, 3)
 
     // reset
     if (this.force.y < 0) {
@@ -101,6 +113,18 @@ class Particle {
       if (this.position.y >= 0) {
         this.position.y = -window.innerHeight
         this.life = 0
+      }
+    }
+    if (this.force.x >= 0) {
+      if (this.position.x >= window.innerWidth) {
+        this.position.x = 0
+        // this.life = 0
+      }
+    }
+    if (this.force.x < 0) {
+      if (this.position.x <= 0) {
+        this.position.x = window.innerWidth
+        // this.life = 0
       }
     }
   }
