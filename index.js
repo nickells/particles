@@ -35,11 +35,21 @@ class Particle {
       x: window.innerWidth * Math.random(),
       y: -window.innerHeight * Math.random(),
     }
+    this.startPosition = {...this.position} // this might be useful
     this.force = {
-      x: (2 * Math.random()) - 1,
-      y: 1,
+      x: 0,
+      y: 0,
     }
-    this.startPosition = {...this.position}
+    this.acceleration = {
+      x: 0,
+      y: 0,
+    }
+    this.velocity = {
+      x: 0,
+      y: 0,
+    }
+
+    this.mass = 0.05
 
     this.seed = Math.random()
 
@@ -58,23 +68,40 @@ class Particle {
     this.constructor()
   }
 
-  update(timestamp){
+  update(){
     this.life++
-    const accelerationPixelsPerFrame = 0.08
-    this.position.y += this.force.y + accelerationPixelsPerFrame * this.life
+
+    // todo: only update this if changed from last tick
+    this.acceleration = {
+      x: this.force.x * this.mass,
+      y: this.force.y * this.mass,
+    }
+
+    this.velocity = {
+      x: this.life * this.acceleration.x,
+      y: this.life * this.acceleration.y
+    }
+
+    this.position.x += this.velocity.x
+    this.position.y += this.velocity.y
+
+
+    // draw
     this.context.fillStyle = 'black'
     this.context.fillRect(this.position.x, -this.position.y, 5, 5)
-    const horizontalMult = 20
-    const timestampSlow = this.life * (Math.PI / 180)
-    const timestampOffset = this.seed * 100
-    // sin(180pi / 180) = 0
-    // sin(90pi / 180) = 1
-    const wind = 0.0
-    this.position.x = this.startPosition.x + (Math.sin(timestampOffset + timestampSlow) * horizontalMult) + (wind * this.life)
-    
-    if (this.position.y <= -window.innerHeight) {
-      this.position.y = 0
-      this.life = 0
+
+    // reset
+    if (this.force.y < 0) {
+      if (this.position.y <= -window.innerHeight) {
+        this.position.y = 0
+        this.life = 0
+      }
+    }
+    else if (this.force.y > 0) {
+      if (this.position.y >= 0) {
+        this.position.y = -window.innerHeight
+        this.life = 0
+      }
     }
   }
 }
