@@ -2,6 +2,10 @@
   tuesday: use real physics
   idea: window dragging?
   config
+  free will slider
+    - pick random point on canvas
+    - for X ticks, velocity or force in that direction
+    - switch after a while or when you hit it
 
 */
 class Field {
@@ -13,8 +17,8 @@ class Field {
     this.particles = []
     document.body.appendChild(this.canvas)
 
-    this.gravity = -0.2
-    this.wind = 0.2
+    this.gravity = 0
+    this.wind = 0
   }
 
   update(timestamp){
@@ -51,9 +55,9 @@ class Particle {
       y: 0,
     }
 
-    this.mass = 0.05
+    this.mass = 1
 
-    this.seed = Math.random()
+    this.seeds = [ Math.random(), Math.random(), Math.random(), Math.random(), Math.random() ]
 
     this.life = 0
   }
@@ -74,29 +78,42 @@ class Particle {
     this.constructor()
   }
 
+
+  getWobble(seed = 0){
+    // wobbles
+    const radian = Math.PI / 180
+    const lifeRadians = (this.life) * radian * this.seeds[seed] // add random so it appears at a random place in the sine curve
+    const horizontalMult = 0.5 * this.seeds[seed]
+    const sinMult = 10 * this.seeds[seed]
+    return (horizontalMult * Math.sin(lifeRadians * sinMult))
+  }
+
   update(){
     this.life++
-
+    
     // todo: only update this if changed from last tick
     this.acceleration = {
       x: this.force.x * this.mass,
       y: this.force.y * this.mass,
     }
 
+    this.acceleration.x += this.getWobble() / 100
+    this.acceleration.x += this.getWobble(1) / 100
+    this.acceleration.x += this.getWobble(2) / 100
+    
+    this.acceleration.y += this.getWobble(3) / 100
+    this.acceleration.y += this.getWobble(4) / 100
+    // gravity-based
+    
     this.velocity = {
       x: this.life * this.acceleration.x,
       y: this.life * this.acceleration.y
     }
+    
 
     this.position.x += this.velocity.x
     this.position.y += this.velocity.y
 
-    // wobbles
-    const radian = Math.PI / 180
-    const lifeRadians = (this.life) * radian * this.seed // add random so it appears at a random place in the sine curve
-    const horizontalMult = 0.5
-    const sinMult = 10
-    this.position.x += (horizontalMult * Math.sin(lifeRadians * sinMult))
 
     // draw
     this.context.fillStyle = 'black'
@@ -131,7 +148,7 @@ class Particle {
 }
 
 const field = new Field()
-for (let i = 0; i < 1000; i++){
+for (let i = 0; i < 100; i++){
   field.addParticle(new Particle())
 }
 
