@@ -18,6 +18,7 @@ export class DrawForceController {
 
   onMouseDown = (e) => {
     this.startPoint = {x: e.pageX, y: e.pageY}
+    this.endPoint = {x: e.pageX, y: e.pageY}
     this.state.down = true
   }
   

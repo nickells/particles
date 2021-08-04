@@ -1,10 +1,8 @@
 export class Particle {
-  constructor(){
-    this.position = {
-      x: window.innerWidth * Math.random(),
-      y: -window.innerHeight * Math.random(),
-    }
-    this.startPosition = {...this.position} // this might be useful
+  constructor({
+    startPosition
+  }){
+    this.position = { ...startPosition}
     this.force = {
       x: 0,
       y: 0,
@@ -24,7 +22,9 @@ export class Particle {
 
     this.lifeSpan = 450
 
-    this.life = -this.startPosition.y // for init, give it momentum proportional to its fall distance
+    this.life = 0
+
+    this._onDelete = () => {}
   }
 
   setContext(context){
@@ -39,11 +39,6 @@ export class Particle {
     this.force.x = wind
   }
 
-  reset(){
-    this.life = 0
-  }
-
-
   getWobble(seed = 0){
     // wobbles
     const radian = Math.PI / 180
@@ -51,6 +46,15 @@ export class Particle {
     const horizontalMult = 0.5 * this.seeds[seed]
     const sinMult = 10 * this.seeds[seed]
     return (horizontalMult * Math.sin(lifeRadians * sinMult))
+  }
+
+  onDelete = (func) => {
+    this._onDelete = func
+  }
+
+  destroy(){
+    this._onDelete(this)
+    delete this
   }
 
   update(){
@@ -89,29 +93,28 @@ export class Particle {
     const width = 3 * this.seeds[0]
     this.context.fillRect(this.position.x, -this.position.y, width, width)
 
-    // reset
+    // reset when OOB
+    if (this.life >= this.lifeSpan) {
+      this.destroy()
+    }
     if (this.force.y < 0) {
       if (this.position.y <= -window.innerHeight) {
-        this.position.y = 0
-        this.life = 0
+        this.destroy()
       }
     }
     else if (this.force.y > 0) {
       if (this.position.y >= 0) {
-        this.position.y = -window.innerHeight
-        this.life = 0
+        this.destroy()
       }
     }
     if (this.force.x >= 0) {
       if (this.position.x >= window.innerWidth) {
-        this.position.x = 0
-        // this.life = 0
+        this.destroy()
       }
     }
     if (this.force.x < 0) {
       if (this.position.x <= 0) {
-        this.position.x = window.innerWidth
-        // this.life = 0
+        this.destroy()
       }
     }
   }

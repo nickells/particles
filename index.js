@@ -26,9 +26,14 @@ drawController.onChange((x, y) => {
   field.updateForces(x, y)
 })
 
-for (let i = 0; i < 100; i++){
-  field.addParticle(new Particle())
-}
+setInterval(() => {
+  field.addParticle(new Particle({
+    startPosition: {
+      x: Math.random() * window.innerWidth,
+      y: field.gravity < 0 ? 1 : -window.innerHeight
+    }
+  }))
+}, 1)
 
 const loop = (timestamp) => {
   field.update(timestamp)
