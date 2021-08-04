@@ -22,7 +22,9 @@ export class Particle {
 
     this.seeds = [ Math.random(), Math.random(), Math.random(), Math.random(), Math.random() ]
 
-    this.life = 0
+    this.lifeSpan = 450
+
+    this.life = -this.startPosition.y // for init, give it momentum proportional to its fall distance
   }
 
   setContext(context){
@@ -38,7 +40,7 @@ export class Particle {
   }
 
   reset(){
-    this.constructor()
+    this.life = 0
   }
 
 
@@ -79,8 +81,13 @@ export class Particle {
 
 
     // draw
-    this.context.fillStyle = 'black'
-    this.context.fillRect(this.position.x, -this.position.y, 3, 3)
+    // this.context.fillStyle = 'black'
+    if (this.lifeSpan < Infinity) {
+      const opacity = Math.max((this.lifeSpan - this.life) / this.lifeSpan, 0)
+      this.context.fillStyle = `rgba(0, 0, 0, ${opacity})`
+    }
+    const width = 3 * this.seeds[0]
+    this.context.fillRect(this.position.x, -this.position.y, width, width)
 
     // reset
     if (this.force.y < 0) {
