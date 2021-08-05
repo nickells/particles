@@ -103,29 +103,30 @@ export class Particle {
     }
     const width = this.config.size * this.seeds[0]
     this.context.fillRect(this.position.x, -this.position.y, width, width)
+    const canvas = this.context.canvas
 
     // reset when OOB
     if (this.life >= this.config.lifespan) {
       this.destroy()
     }
     if (this.force.y < 0) {
-      if (this.position.y <= -window.innerHeight) {
+      if (this.position.y <= -canvas.height * 2) {
         this.destroy()
       }
     }
     else if (this.force.y > 0) {
-      if (this.position.y >= 0) {
+      if (this.position.y >= canvas.height) {
         this.destroy()
       }
     }
     if (this.force.x >= 0) {
-      if (this.position.x >= window.innerWidth) {
-        this.destroy()
+      if (this.position.x >= canvas.width) {
+        this.position.x = 0
       }
     }
     if (this.force.x < 0) {
       if (this.position.x <= 0) {
-        this.destroy()
+        this.position.x = canvas.width
       }
     }
   }

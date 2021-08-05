@@ -1,9 +1,9 @@
 export class DrawForceController {
-  constructor(canvasContext, canvasElem){
+  constructor(canvasContext){
     this.canvasContext = canvasContext
-    canvasElem.addEventListener('mousedown', this.onMouseDown)
-    canvasElem.addEventListener('mouseup', this.onMouseUp)
-    canvasElem.addEventListener('mousemove', this.onMouseMove)
+    this.canvasContext.canvas.addEventListener('mousedown', this.onMouseDown)
+    this.canvasContext.canvas.addEventListener('mouseup', this.onMouseUp)
+    this.canvasContext.canvas.addEventListener('mousemove', this.onMouseMove)
 
     this.state = {
       down: false

@@ -1,5 +1,12 @@
 import Knob from "./Knob"
 
+export const INITIAL_VALUES = {
+  lifespan: 1620,
+  autonomy: 1,
+  size: 5,
+  intensity: 100,
+}
+
 export const init = (fieldInstance) => {
   const lifespan = new Knob({
     notches: 16,
@@ -7,9 +14,12 @@ export const init = (fieldInstance) => {
     max: 2000,
     selector: document.getElementById('knob-1')
   })
+  .setValue(INITIAL_VALUES.lifespan)
   .onChange(val => {
+    console.log(val)
+    let _val = Math.round(val)
     fieldInstance.setConfig({
-      lifespan: val === 2000 ? Infinity : val
+      lifespan: _val === 2000 ? Infinity : _val
     })
   })
   const freeWill = new Knob({
@@ -18,30 +28,34 @@ export const init = (fieldInstance) => {
     max: 5,
     selector: document.getElementById('knob-2')
   })
+  .setValue(INITIAL_VALUES.autonomy)
   .onChange(val => {
     fieldInstance.setConfig({
-      freeWill: val
+      freeWill: Math.round(val)
     })
   })
   const size = new Knob({
     notches: 8,
     min: 2,
-    max: 10,
+    max: 9,
     selector: document.getElementById('knob-3')
   })
+  .setValue(INITIAL_VALUES.size)
   .onChange(val => {
     fieldInstance.setConfig({
-      size: val
+      size: Math.round(val)
     })
   })
   const intensity = new Knob({
     notches: 16,
-    min: 1,
+    min: 0,
     max: 100,
     selector: document.getElementById('knob-4')
   })
+  .setValue(INITIAL_VALUES.intensity)
   .onChange(val => {
-    const interval = 101 - val
+    console.log(val)
+    const interval = 100 - Math.round(val)
     fieldInstance.interval = interval
   })
 }

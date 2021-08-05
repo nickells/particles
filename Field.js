@@ -1,4 +1,5 @@
 import { Particle } from "./Particle"
+import { INITIAL_VALUES } from "./UI"
 
 export class Field {
   constructor(){
@@ -9,16 +10,10 @@ export class Field {
     this.particles = new Set()
     document.body.appendChild(this.canvas)
 
-    this.interval = 1
-
     this.gravity = -0.1
     this.wind = 0
     
-    this.particleConfig = {
-      lifespan: 500,
-      freeWill: 1,
-      size: 5,
-    }
+    this.particleConfig = { ...INITIAL_VALUES }
   }
 
   update(timestamp){
@@ -32,6 +27,7 @@ export class Field {
       ...this.particleConfig,
       ...keyVal,
     }
+    this.particles.forEach(particle => particle.setConfig(this.particleConfig))
   }
 
   updateForces(x, y){
@@ -59,14 +55,20 @@ export class Field {
     const startParticles = () => {
       this.addParticle(new Particle({
         startPosition: {
-          x: Math.random() * window.innerWidth,
-          y: this.gravity < 0 ? 1 : -(window.innerHeight - document.getElementById('hud').getBoundingClientRect().height)
+          x: Math.random() * this.canvas.width,
+          y: this.gravity < 0 ? 1 : -(this.canvas.height - this.particleConfig.size)
         }
       }))
-      this.timeout = setTimeout(startParticles, this.interval)
+      const interval = 100 - this.particleConfig.intensity
+      this.timeout = setTimeout(startParticles, interval)
     }
 
     startParticles()
+  }
+
+  onResize = () => {
+    this.canvas.width = window.innerWidth
+    this.canvas.height = window.innerHeight - document.getElementById('hud').getBoundingClientRect().height
   }
 
   stop(){

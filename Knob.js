@@ -95,11 +95,16 @@ function degreeToValue(deg, DEGREES_DEAD_AREA, min, max) {
 }
 
 function valueToDegree(val, DEGREES_DEAD_AREA, min, max) {
+  console.log({
+    val,
+    min,
+    max
+  })
   // calc offset
   const offset = DEGREES_DEAD_AREA / 2
   
   // get degrees out of 360 (minus offset)
-  let deg = val / (max - min) * (360 - DEGREES_DEAD_AREA)
+  let deg = (val - min) / (max - min) * (360 - DEGREES_DEAD_AREA)
   
   // flip directions (and orientation)
   deg = 270 - deg 
@@ -113,7 +118,7 @@ function valueToDegree(val, DEGREES_DEAD_AREA, min, max) {
 function Knob({ selector: elem, notches: notchesCount, min = 0, max = 100, deadArea: DEGREES_DEAD_AREA = 90 }) {
   
   let spinner = elem
-  let inner = elem.firstElementChild
+  let inner = elem.firstChild
   let _onChange = () => {}
 
   // if there is a dead zone, add 1 to notchescount to spread evenly. otherwise it will overlap at the 360 mark
@@ -136,11 +141,6 @@ function Knob({ selector: elem, notches: notchesCount, min = 0, max = 100, deadA
 
   // sort the degree set so we can properly get the closest match algorithmically
   degreesSet.sort((a, b) => a - b)
-
-  const center = {
-    x: spinner.offsetLeft + spinner.offsetWidth / 2,
-    y: spinner.offsetTop + spinner.offsetHeight / 2
-  }
 
   let lastDeg = 0,
     active = false
@@ -165,6 +165,10 @@ function Knob({ selector: elem, notches: notchesCount, min = 0, max = 100, deadA
     const getCoordForElement = getCoord(e)
     e.preventDefault()
     if (active) {
+      const center = {
+        x: spinner.offsetLeft + spinner.offsetWidth / 2,
+        y: spinner.offsetTop + spinner.offsetHeight / 2
+      }
       let diffX = getCoordForElement('X') - center.x
       let diffY = center.y - getCoordForElement('Y') // because Y is upside down from regular math
       let arctan = Math.atan2(diffY, diffX)
@@ -187,7 +191,6 @@ function Knob({ selector: elem, notches: notchesCount, min = 0, max = 100, deadA
     }
   }
 
-
   spinner.addEventListener('mousedown', onGrab, false)
   spinner.addEventListener('mousedown', onGrab, false)
   spinner.addEventListener('touchstart', onGrab, false)
@@ -199,6 +202,7 @@ function Knob({ selector: elem, notches: notchesCount, min = 0, max = 100, deadA
   return {
     setValue(val) {
       rotate(valueToDegree(val, DEGREES_DEAD_AREA, min, max))
+      console.log('setting', val)
       return this
     },
     onChange(func) {
