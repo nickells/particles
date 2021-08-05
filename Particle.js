@@ -111,12 +111,12 @@ export class Particle {
       this.destroy()
     }
     if (this.force.y < 0) {
-      if (this.position.y <= -canvas.height * 2) {
+      if (this.position.y <= -canvas.height) {
         this.destroy()
       }
     }
     else if (this.force.y > 0) {
-      if (this.position.y >= canvas.height) {
+      if (this.position.y >= 0) {
         this.destroy()
       }
     }

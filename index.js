@@ -3,6 +3,8 @@
   lifespan 100 pauses spawning
   color?
   blur?
+  animated favicon?
+  // embed + colors
 */
 
 import { DrawForceController } from "./draw-force"

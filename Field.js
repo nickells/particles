@@ -14,6 +14,8 @@ export class Field {
     this.wind = 0
     
     this.particleConfig = { ...INITIAL_VALUES }
+
+    this.emitting = false
   }
 
   update(timestamp){
@@ -37,6 +39,12 @@ export class Field {
       particle.setGravity(this.gravity)
       particle.setWind(this.wind)
     })
+
+    if (this.gravity === 0) {
+      this.stop()
+    } else if (!this.emitting) {
+      this.start()
+    }
   }
 
   addParticle(particle) {
@@ -63,6 +71,7 @@ export class Field {
     }
 
     startParticles()
+    this.emitting = true
   }
 
   onResize = () => {
@@ -71,6 +80,7 @@ export class Field {
   }
 
   stop(){
+    this.emitting = false
     clearTimeout(this.timeout)
   }
 }
