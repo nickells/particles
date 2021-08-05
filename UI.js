@@ -5,6 +5,8 @@ export const INITIAL_VALUES = {
   autonomy: 1,
   size: 5,
   intensity: 100,
+  gravity: -0.1,
+  wind: 0,
 }
 
 export const init = (fieldInstance) => {
@@ -16,13 +18,12 @@ export const init = (fieldInstance) => {
   })
   .setValue(INITIAL_VALUES.lifespan)
   .onChange(val => {
-    console.log(val)
     let _val = Math.round(val)
     fieldInstance.setConfig({
       lifespan: _val === 2000 ? Infinity : _val
     })
   })
-  const freeWill = new Knob({
+  const autonomy = new Knob({
     notches: 6,
     min: 0,
     max: 5,
@@ -31,7 +32,7 @@ export const init = (fieldInstance) => {
   .setValue(INITIAL_VALUES.autonomy)
   .onChange(val => {
     fieldInstance.setConfig({
-      freeWill: Math.round(val)
+      autonomy: Math.round(val)
     })
   })
   const size = new Knob({
@@ -54,8 +55,8 @@ export const init = (fieldInstance) => {
   })
   .setValue(INITIAL_VALUES.intensity)
   .onChange(val => {
-    console.log(val)
-    const interval = 100 - Math.round(val)
-    fieldInstance.interval = interval
+    fieldInstance.setConfig({
+      intensity: Math.round(val)
+    })
   })
 }

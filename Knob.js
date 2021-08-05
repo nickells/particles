@@ -95,11 +95,6 @@ function degreeToValue(deg, DEGREES_DEAD_AREA, min, max) {
 }
 
 function valueToDegree(val, DEGREES_DEAD_AREA, min, max) {
-  console.log({
-    val,
-    min,
-    max
-  })
   // calc offset
   const offset = DEGREES_DEAD_AREA / 2
   
@@ -158,7 +153,6 @@ function Knob({ selector: elem, notches: notchesCount, min = 0, max = 100, deadA
     // change degree to match CSS's interpretation of geometry
     // and because the notch is vertical upon start
     inner.style.transform = `rotate(${90 - deg}deg)`
-    navigator.vibrate && navigator.vibrate([50])
   }
 
   function onMove(e) {
@@ -177,6 +171,7 @@ function Knob({ selector: elem, notches: notchesCount, min = 0, max = 100, deadA
       if (Math.abs(roundDeg) === Math.abs(lastDeg)) return
       else {
         rotate(roundDeg)
+        navigator.vibrate && navigator.vibrate([50])
         _onChange(degreeToValue(roundDeg, DEGREES_DEAD_AREA, min, max))
       }
     }
@@ -202,7 +197,6 @@ function Knob({ selector: elem, notches: notchesCount, min = 0, max = 100, deadA
   return {
     setValue(val) {
       rotate(valueToDegree(val, DEGREES_DEAD_AREA, min, max))
-      console.log('setting', val)
       return this
     },
     onChange(func) {

@@ -19,7 +19,6 @@ export class Field {
   update(timestamp){
     this.context.clearRect(0, 0, this.canvas.width, this.canvas.height)
     this.particles.forEach(particle => particle.update(timestamp))
-    this.life++
   }
 
   setConfig = (keyVal) => {

@@ -22,7 +22,7 @@ export class Particle {
 
     this.config = {
       lifespan: 500,
-      freeWill: 1,
+      autonomy: 1,
       size: 5,
     }
 
@@ -66,8 +66,9 @@ export class Particle {
     delete this
   }
 
-  update(){
-    this.life++
+  update(timestamp){
+    this.life += 1
+    this.lastTime = timestamp
     
     // todo: only update this if changed from last tick
     this.acceleration = {
@@ -75,9 +76,9 @@ export class Particle {
       y: this.force.y * this.mass,
     }
 
-    for (let i  = 0; i < this.config.freeWill; i++) {
+    for (let i  = 0; i < this.config.autonomy; i++) {
       let dimension = i % 2 === 0 ? 'x' : 'y'
-      this.position[dimension] += (this.getWobble(i) * (this.config.freeWill + 1))
+      this.position[dimension] += (this.getWobble(i) * (this.config.autonomy + 1))
     }
     // this.acceleration.x += this.getWob
     // gravity-based
