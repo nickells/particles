@@ -103,9 +103,12 @@ export class Particle {
       this.context.fillStyle = `rgba(0, 0, 0, 1)`
     }
     const width = this.config.size * this.seeds[0]
-    this.context.fillRect(this.position.x, -this.position.y, width, width)
-    const canvas = this.context.canvas
 
+    this.context.beginPath();
+    this.context.arc(this.position.x, -this.position.y, width, 0, 2 * Math.PI, false);
+    this.context.fill();
+    const canvas = this.context.canvas
+    
     // reset when OOB
     if (this.life >= this.config.lifespan) {
       this.destroy()
