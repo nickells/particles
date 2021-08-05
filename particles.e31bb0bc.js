@@ -341,11 +341,11 @@ var Particle = /*#__PURE__*/function () {
       }
 
       if (this.force.y < 0) {
-        if (this.position.y <= -canvas.height * 2) {
+        if (this.position.y <= -canvas.height) {
           this.destroy();
         }
       } else if (this.force.y > 0) {
-        if (this.position.y >= canvas.height) {
+        if (this.position.y >= 0) {
           this.destroy();
         }
       }
@@ -743,6 +743,7 @@ var Field = /*#__PURE__*/function () {
     this.gravity = -0.1;
     this.wind = 0;
     this.particleConfig = _objectSpread({}, _UI.INITIAL_VALUES);
+    this.emitting = false;
   }
 
   _createClass(Field, [{
@@ -765,6 +766,12 @@ var Field = /*#__PURE__*/function () {
         particle.setGravity(_this2.gravity);
         particle.setWind(_this2.wind);
       });
+
+      if (this.gravity === 0) {
+        this.stop();
+      } else if (!this.emitting) {
+        this.start();
+      }
     }
   }, {
     key: "addParticle",
@@ -798,10 +805,12 @@ var Field = /*#__PURE__*/function () {
       };
 
       startParticles();
+      this.emitting = true;
     }
   }, {
     key: "stop",
     value: function stop() {
+      this.emitting = false;
       clearTimeout(this.timeout);
     }
   }]);
@@ -824,6 +833,8 @@ var _UI = require("./UI");
   lifespan 100 pauses spawning
   color?
   blur?
+  animated favicon?
+  // embed + colors
 */
 var field = new _Field.Field();
 var drawController = new _drawForce.DrawForceController(field.context);
@@ -884,7 +895,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "52345" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "50283" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
