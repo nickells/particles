@@ -11,4 +11,4 @@ parcelRequire=function(e,r,t,n){var i,o="function"==typeof parcelRequire&&parcel
 },{"./Particle":"xNDZ","./UI":"yntx"}],"Focm":[function(require,module,exports) {
 "use strict";var e=require("./draw-force"),r=require("./Field"),n=require("./UI"),t=new r.Field,i=new e.DrawForceController(t.context);i.onChange(function(e,r){t.updateForces(e,r)}),t.start();var o=function(e){var r;return function(){for(var n=arguments.length,t=new Array(n),i=0;i<n;i++)t[i]=arguments[i];clearTimeout(r),r=setTimeout(function(){return e.apply(void 0,t)},300)}};window.addEventListener("resize",o(t.onResize));var a=function e(r){t.update(r),i.update(),requestAnimationFrame(e)};(0,n.init)(t),a();
 },{"./draw-force":"NhPo","./Field":"PT0a","./UI":"yntx"}]},{},["Focm"], null)
-//# sourceMappingURL=particles/particles.f79b8267.js.map
+//# sourceMappingURL=particles.f79b8267.js.map
