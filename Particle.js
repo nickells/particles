@@ -20,7 +20,12 @@ export class Particle {
 
     this.seeds = [ Math.random(), Math.random(), Math.random(), Math.random(), Math.random() ]
 
-    this.lifeSpan = 450
+    this.config = {
+      lifespan: 500,
+      freeWill: 1,
+      size: 5,
+    }
+
 
     this.life = 0
 
@@ -37,6 +42,10 @@ export class Particle {
 
   setWind(wind){
     this.force.x = wind
+  }
+
+  setConfig(config){
+    this.config = config
   }
 
   getWobble(seed = 0){
@@ -66,12 +75,11 @@ export class Particle {
       y: this.force.y * this.mass,
     }
 
-    this.position.x += this.getWobble()
-    // this.acceleration.x += this.getWobble(1) 
-    // this.acceleration.x += this.getWobble(2) / 100
-    
-    // this.acceleration.y += this.getWobble(3) / 100
-    // this.acceleration.y += this.getWobble(4) / 100
+    for (let i  = 0; i < this.config.freeWill; i++) {
+      let dimension = i % 2 === 0 ? 'x' : 'y'
+      this.position[dimension] += (this.getWobble(i) * (this.config.freeWill + 1))
+    }
+    // this.acceleration.x += this.getWob
     // gravity-based
     
     this.velocity = {
@@ -86,15 +94,18 @@ export class Particle {
 
     // draw
     // this.context.fillStyle = 'black'
-    if (this.lifeSpan < Infinity) {
-      const opacity = Math.max((this.lifeSpan - this.life) / this.lifeSpan, 0)
+    if (this.config.lifespan < Infinity) {
+      const opacity = Math.max((this.config.lifespan - this.life) / this.config.lifespan, 0)
       this.context.fillStyle = `rgba(0, 0, 0, ${opacity})`
     }
-    const width = 3 * this.seeds[0]
+    else {
+      this.context.fillStyle = `rgba(0, 0, 0, 1)`
+    }
+    const width = this.config.size * this.seeds[0]
     this.context.fillRect(this.position.x, -this.position.y, width, width)
 
     // reset when OOB
-    if (this.life >= this.lifeSpan) {
+    if (this.life >= this.config.lifespan) {
       this.destroy()
     }
     if (this.force.y < 0) {

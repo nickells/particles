@@ -1,9 +1,9 @@
 export class DrawForceController {
-  constructor(canvasContext){
+  constructor(canvasContext, canvasElem){
     this.canvasContext = canvasContext
-    document.addEventListener('mousedown', this.onMouseDown)
-    document.addEventListener('mouseup', this.onMouseUp)
-    document.addEventListener('mousemove', this.onMouseMove)
+    canvasElem.addEventListener('mousedown', this.onMouseDown)
+    canvasElem.addEventListener('mouseup', this.onMouseUp)
+    canvasElem.addEventListener('mousemove', this.onMouseMove)
 
     this.state = {
       down: false
@@ -17,14 +17,15 @@ export class DrawForceController {
   }
 
   onMouseDown = (e) => {
-    this.startPoint = {x: e.pageX, y: e.pageY}
-    this.endPoint = {x: e.pageX, y: e.pageY}
+    this.startPoint = {x: e.offsetX, y: e.offsetY}
+    this.endPoint = {x: e.offsetX, y: e.offsetY}
     this.state.down = true
   }
   
   onMouseUp = (e) => {
+    if (!this.state.down) return
     this.state.down = false
-    this.endPoint = {x: e.pageX, y: e.pageY}
+    this.endPoint = {x: e.offsetX, y: e.offsetY}
 
     this._onChange(
       this.endPoint.x - this.startPoint.x,
@@ -34,7 +35,7 @@ export class DrawForceController {
 
   onMouseMove = (e) => {
     if (this.state.down) {
-      this.endPoint = {x: e.pageX, y: e.pageY}
+      this.endPoint = {x: e.offsetX, y: e.offsetY}
     }
   }
 
