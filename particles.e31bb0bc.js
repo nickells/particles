@@ -117,263 +117,13 @@ parcelRequire = (function (modules, cache, entry, globalName) {
   }
 
   return newRequire;
-})({"draw-force.js":[function(require,module,exports) {
+})({"Knob.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.DrawForceController = void 0;
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
-var DrawForceController = /*#__PURE__*/function () {
-  function DrawForceController(canvasContext) {
-    var _this = this;
-
-    _classCallCheck(this, DrawForceController);
-
-    _defineProperty(this, "onChange", function (func) {
-      _this._onChange = func;
-    });
-
-    _defineProperty(this, "onMouseDown", function (e) {
-      _this.startPoint = {
-        x: e.offsetX,
-        y: e.offsetY
-      };
-      _this.endPoint = {
-        x: e.offsetX,
-        y: e.offsetY
-      };
-      _this.state.down = true;
-    });
-
-    _defineProperty(this, "onMouseUp", function (e) {
-      if (!_this.state.down) return;
-      _this.state.down = false;
-      _this.endPoint = {
-        x: e.offsetX,
-        y: e.offsetY
-      };
-
-      _this._onChange(_this.endPoint.x - _this.startPoint.x, _this.endPoint.y - _this.startPoint.y);
-    });
-
-    _defineProperty(this, "onMouseMove", function (e) {
-      if (_this.state.down) {
-        _this.endPoint = {
-          x: e.offsetX,
-          y: e.offsetY
-        };
-      }
-    });
-
-    this.canvasContext = canvasContext;
-    this.canvasContext.canvas.addEventListener('mousedown', this.onMouseDown);
-    this.canvasContext.canvas.addEventListener('mouseup', this.onMouseUp);
-    this.canvasContext.canvas.addEventListener('mousemove', this.onMouseMove);
-    this.state = {
-      down: false
-    };
-
-    this._onChange = function () {};
-  }
-
-  _createClass(DrawForceController, [{
-    key: "update",
-    value: function update() {
-      if (this.state.down) {
-        this.canvasContext.strokeStyle = 'red';
-        this.canvasContext.beginPath();
-        this.canvasContext.moveTo(this.startPoint.x, this.startPoint.y);
-        this.canvasContext.lineTo(this.endPoint.x, this.endPoint.y);
-        this.canvasContext.stroke();
-      }
-    }
-  }]);
-
-  return DrawForceController;
-}();
-
-exports.DrawForceController = DrawForceController;
-},{}],"Particle.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.Particle = void 0;
-
-function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) { symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
-
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
-var Particle = /*#__PURE__*/function () {
-  function Particle(_ref) {
-    var _this = this;
-
-    var startPosition = _ref.startPosition;
-
-    _classCallCheck(this, Particle);
-
-    _defineProperty(this, "onDelete", function (func) {
-      _this._onDelete = func;
-    });
-
-    this.position = _objectSpread({}, startPosition);
-    this.force = {
-      x: 0,
-      y: 0
-    };
-    this.acceleration = {
-      x: 0,
-      y: 0
-    };
-    this.velocity = {
-      x: 0,
-      y: 0
-    };
-    this.mass = 0.1;
-    this.seeds = [Math.random(), Math.random(), Math.random(), Math.random(), Math.random()];
-    this.config = {
-      lifespan: 500,
-      autonomy: 1,
-      size: 5
-    };
-    this.life = 0;
-
-    this._onDelete = function () {};
-  }
-
-  _createClass(Particle, [{
-    key: "setContext",
-    value: function setContext(context) {
-      this.context = context;
-    }
-  }, {
-    key: "setGravity",
-    value: function setGravity(gravity) {
-      this.force.y = gravity;
-    }
-  }, {
-    key: "setWind",
-    value: function setWind(wind) {
-      this.force.x = wind;
-    }
-  }, {
-    key: "setConfig",
-    value: function setConfig(config) {
-      this.config = config;
-    }
-  }, {
-    key: "getWobble",
-    value: function getWobble() {
-      var seed = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
-      // wobbles
-      var radian = Math.PI / 180;
-      var lifeRadians = this.life * radian * this.seeds[seed]; // add random so it appears at a random place in the sine curve
-
-      var horizontalMult = 0.5 * this.seeds[seed];
-      var sinMult = 10 * this.seeds[seed];
-      return horizontalMult * Math.sin(lifeRadians * sinMult);
-    }
-  }, {
-    key: "destroy",
-    value: function destroy() {
-      this._onDelete(this);
-
-      delete this;
-    }
-  }, {
-    key: "update",
-    value: function update(timestamp) {
-      this.life += 1;
-      this.lastTime = timestamp; // todo: only update this if changed from last tick
-
-      this.acceleration = {
-        x: this.force.x * this.mass,
-        y: this.force.y * this.mass
-      };
-
-      for (var i = 0; i < this.config.autonomy; i++) {
-        var dimension = i % 2 === 0 ? 'x' : 'y';
-        this.position[dimension] += this.getWobble(i) * (this.config.autonomy + 1);
-      } // this.acceleration.x += this.getWob
-      // gravity-based
-
-
-      this.velocity = {
-        x: this.life * this.acceleration.x,
-        y: this.life * this.acceleration.y
-      };
-      this.position.x += this.velocity.x;
-      this.position.y += this.velocity.y; // draw
-      // this.context.fillStyle = 'black'
-
-      if (this.config.lifespan < Infinity) {
-        var opacity = Math.max((this.config.lifespan - this.life) / this.config.lifespan, 0);
-        this.context.fillStyle = "rgba(0, 0, 0, ".concat(opacity, ")");
-      } else {
-        this.context.fillStyle = "rgba(0, 0, 0, 1)";
-      }
-
-      var width = this.config.size * this.seeds[0];
-      this.context.fillRect(this.position.x, -this.position.y, width, width);
-      var canvas = this.context.canvas; // reset when OOB
-
-      if (this.life >= this.config.lifespan) {
-        this.destroy();
-      }
-
-      if (this.force.y < 0) {
-        if (this.position.y <= -canvas.height) {
-          this.destroy();
-        }
-      } else if (this.force.y > 0) {
-        if (this.position.y >= 0) {
-          this.destroy();
-        }
-      }
-
-      if (this.force.x >= 0) {
-        if (this.position.x >= canvas.width) {
-          this.position.x = 0;
-        }
-      }
-
-      if (this.force.x < 0) {
-        if (this.position.x <= 0) {
-          this.position.x = canvas.width;
-        }
-      }
-    }
-  }]);
-
-  return Particle;
-}();
-
-exports.Particle = Particle;
-},{}],"Knob.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
+exports.getClientCoords = getClientCoords;
 exports.default = void 0;
 
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) { symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
@@ -428,11 +178,14 @@ var toRadians = function toRadians(degree) {
   return degree * (Math.PI / 180);
 };
 
-function getCoord(evt) {
-  return function (val) {
-    var coord = val === 'X' ? 'clientX' : 'clientY';
-    return HAS_TOUCH ? evt.touches[0][coord] : evt[coord];
-  }; // switch to screen if parent has unknown width?
+function getClientCoords(evt) {
+  return HAS_TOUCH ? {
+    x: evt.touches[0].clientX,
+    y: evt.touches[0].clientY
+  } : {
+    x: evt.clientX,
+    y: evt.clientY
+  };
 }
 
 function within(val, min, max) {
@@ -570,23 +323,25 @@ function Knob(_ref) {
   }
 
   function onMove(e) {
-    var getCoordForElement = getCoord(e);
     e.preventDefault();
 
     if (active) {
+      var _getClientCoords = getClientCoords(e),
+          x = _getClientCoords.x,
+          y = _getClientCoords.y;
+
       var center = {
         x: spinner.offsetLeft + spinner.offsetWidth / 2,
         y: spinner.offsetTop + spinner.offsetHeight / 2
       };
-      var diffX = getCoordForElement('X') - center.x;
-      var diffY = center.y - getCoordForElement('Y'); // because Y is upside down from regular math
+      var diffX = x - center.x;
+      var diffY = center.y - y; // because Y is upside down from regular math
 
       var arctan = Math.atan2(diffY, diffX);
       var deg = (toDegrees(arctan) + 360) % 360;
       var roundDeg = nearestFromSet(deg, degreesSet);
       if (Math.abs(roundDeg) === Math.abs(lastDeg)) return;else {
         rotate(roundDeg);
-        navigator.vibrate && navigator.vibrate([50]);
 
         _onChange(degreeToValue(roundDeg, DEGREES_DEAD_AREA, min, max));
       }
@@ -602,13 +357,34 @@ function Knob(_ref) {
     }
   }
 
-  spinner.addEventListener('mousedown', onGrab, false);
-  spinner.addEventListener('mousedown', onGrab, false);
-  spinner.addEventListener('touchstart', onGrab, false);
-  window.addEventListener('mouseup', onRelease, false);
-  window.addEventListener('touchend', onRelease, false);
-  window.addEventListener('mousemove', onMove, false);
-  window.addEventListener('touchmove', onMove, false);
+  spinner.addEventListener('mousedown', onGrab, {
+    passive: false,
+    bubbles: false
+  });
+  spinner.addEventListener('mousedown', onGrab, {
+    passive: false,
+    bubbles: false
+  });
+  spinner.addEventListener('touchstart', onGrab, {
+    passive: false,
+    bubbles: false
+  });
+  window.addEventListener('mouseup', onRelease, {
+    passive: false,
+    bubbles: false
+  });
+  window.addEventListener('touchend', onRelease, {
+    passive: false,
+    bubbles: false
+  });
+  window.addEventListener('mousemove', onMove, {
+    passive: false,
+    bubbles: false
+  });
+  window.addEventListener('touchmove', onMove, {
+    passive: false,
+    bubbles: false
+  });
   return {
     setValue: function setValue(val) {
       rotate(valueToDegree(val, DEGREES_DEAD_AREA, min, max));
@@ -623,6 +399,286 @@ function Knob(_ref) {
 
 var _default = Knob;
 exports.default = _default;
+},{}],"draw-force.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.DrawForceController = void 0;
+
+var _Knob = require("./Knob");
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+var DrawForceController = /*#__PURE__*/function () {
+  function DrawForceController(canvasContext) {
+    var _this = this;
+
+    _classCallCheck(this, DrawForceController);
+
+    _defineProperty(this, "onChange", function (func) {
+      _this._onChange = func;
+    });
+
+    _defineProperty(this, "onMouseDown", function (e) {
+      e.preventDefault();
+
+      var _this$getCanvasCoords = _this.getCanvasCoords(e),
+          x = _this$getCanvasCoords.x,
+          y = _this$getCanvasCoords.y;
+
+      _this.startPoint = {
+        x: x,
+        y: y
+      };
+      _this.endPoint = {
+        x: x,
+        y: y
+      };
+      _this.state.down = true;
+    });
+
+    _defineProperty(this, "onMouseUp", function (e) {
+      e.preventDefault();
+      if (!_this.state.down) return;
+      _this.state.down = false;
+
+      _this._onChange(_this.endPoint.x - _this.startPoint.x, _this.endPoint.y - _this.startPoint.y);
+    });
+
+    _defineProperty(this, "onMouseMove", function (e) {
+      e.preventDefault();
+
+      var _this$getCanvasCoords2 = _this.getCanvasCoords(e),
+          x = _this$getCanvasCoords2.x,
+          y = _this$getCanvasCoords2.y;
+
+      if (_this.state.down) {
+        _this.endPoint = {
+          x: x,
+          y: y
+        };
+      }
+    });
+
+    _defineProperty(this, "getCanvasCoords", function (e) {
+      var _getClientCoords = (0, _Knob.getClientCoords)(e),
+          canvasX = _getClientCoords.x,
+          canvasY = _getClientCoords.y;
+
+      var x = canvasX - e.target.offsetLeft;
+      var y = canvasY - e.target.offsetTop;
+      return {
+        x: x,
+        y: y
+      };
+    });
+
+    this.canvasContext = canvasContext;
+    this.canvasContext.canvas.addEventListener('mousedown', this.onMouseDown);
+    this.canvasContext.canvas.addEventListener('mouseup', this.onMouseUp);
+    this.canvasContext.canvas.addEventListener('mousemove', this.onMouseMove);
+    this.canvasContext.canvas.addEventListener('touchstart', this.onMouseDown);
+    this.canvasContext.canvas.addEventListener('touchend', this.onMouseUp);
+    this.canvasContext.canvas.addEventListener('touchmove', this.onMouseMove);
+    this.state = {
+      down: false
+    };
+
+    this._onChange = function () {};
+  }
+
+  _createClass(DrawForceController, [{
+    key: "update",
+    value: function update() {
+      if (this.state.down) {
+        this.canvasContext.strokeStyle = 'red';
+        this.canvasContext.beginPath();
+        this.canvasContext.moveTo(this.startPoint.x, this.startPoint.y);
+        this.canvasContext.lineTo(this.endPoint.x, this.endPoint.y);
+        this.canvasContext.stroke();
+      }
+    }
+  }]);
+
+  return DrawForceController;
+}();
+
+exports.DrawForceController = DrawForceController;
+},{"./Knob":"Knob.js"}],"Particle.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Particle = void 0;
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) { symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+var Particle = /*#__PURE__*/function () {
+  function Particle(_ref) {
+    var _this = this;
+
+    var startPosition = _ref.startPosition;
+
+    _classCallCheck(this, Particle);
+
+    _defineProperty(this, "onDelete", function (func) {
+      _this._onDelete = func;
+    });
+
+    this.position = _objectSpread({}, startPosition);
+    this.force = {
+      x: 0,
+      y: 0
+    };
+    this.acceleration = {
+      x: 0,
+      y: 0
+    };
+    this.velocity = {
+      x: 0,
+      y: 0
+    };
+    this.mass = 0.1;
+    this.seeds = [Math.random(), Math.random(), Math.random(), Math.random(), Math.random()];
+    this.config = {
+      lifespan: 500,
+      autonomy: 1,
+      size: 5
+    };
+    this.life = 0;
+
+    this._onDelete = function () {};
+  }
+
+  _createClass(Particle, [{
+    key: "setContext",
+    value: function setContext(context) {
+      this.context = context;
+    }
+  }, {
+    key: "setGravity",
+    value: function setGravity(gravity) {
+      this.force.y = gravity;
+    }
+  }, {
+    key: "setWind",
+    value: function setWind(wind) {
+      this.force.x = wind;
+    }
+  }, {
+    key: "setConfig",
+    value: function setConfig(config) {
+      this.config = config;
+    }
+  }, {
+    key: "getWobble",
+    value: function getWobble() {
+      var seed = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
+      // wobbles
+      var radian = Math.PI / 180;
+      var lifeRadians = this.life * radian * this.seeds[seed]; // add random so it appears at a random place in the sine curve
+
+      var horizontalMult = 0.5 * this.seeds[seed];
+      var sinMult = 10 * this.seeds[seed];
+      return horizontalMult * Math.sin(lifeRadians * sinMult);
+    }
+  }, {
+    key: "destroy",
+    value: function destroy() {
+      this._onDelete(this);
+
+      delete this;
+    }
+  }, {
+    key: "update",
+    value: function update(timestamp) {
+      this.life += 1;
+      this.lastTime = timestamp; // todo: only update this if changed from last tick
+
+      this.acceleration = {
+        x: this.force.x * this.mass,
+        y: this.force.y * this.mass
+      };
+
+      for (var i = 0; i < this.config.autonomy; i++) {
+        var dimension = i % 2 === 0 ? 'x' : 'y';
+        this.position[dimension] += this.getWobble(i) * (this.config.autonomy + 1);
+      } // this.acceleration.x += this.getWob
+      // gravity-based
+
+
+      this.velocity = {
+        x: this.life * this.acceleration.x,
+        y: this.life * this.acceleration.y
+      };
+      this.position.x += this.velocity.x;
+      this.position.y += this.velocity.y; // draw
+      // this.context.fillStyle = 'black'
+
+      if (this.config.lifespan < Infinity) {
+        var opacity = Math.max((this.config.lifespan - this.life) / this.config.lifespan, 0);
+        this.context.fillStyle = "rgba(0, 0, 0, ".concat(opacity, ")");
+      } else {
+        this.context.fillStyle = "rgba(0, 0, 0, 1)";
+      }
+
+      var width = this.config.size * this.seeds[0];
+      this.context.beginPath();
+      this.context.arc(this.position.x, -this.position.y, width, 0, 2 * Math.PI, false);
+      this.context.fill();
+      var canvas = this.context.canvas; // reset when OOB
+
+      if (this.life >= this.config.lifespan) {
+        this.destroy();
+      }
+
+      if (this.force.y < 0) {
+        if (this.position.y <= -canvas.height) {
+          this.destroy();
+        }
+      } else if (this.force.y > 0) {
+        if (this.position.y >= 0) {
+          this.destroy();
+        }
+      }
+
+      if (this.force.x >= 0) {
+        if (this.position.x >= canvas.width) {
+          this.position.x = 0;
+        }
+      }
+
+      if (this.force.x < 0) {
+        if (this.position.x <= 0) {
+          this.position.x = canvas.width;
+        }
+      }
+    }
+  }]);
+
+  return Particle;
+}();
+
+exports.Particle = Particle;
 },{}],"UI.js":[function(require,module,exports) {
 "use strict";
 
@@ -638,10 +694,10 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var INITIAL_VALUES = {
   lifespan: 1620,
   autonomy: 1,
-  size: 5,
+  size: 3,
   intensity: 100,
-  gravity: -0.1,
-  wind: 0
+  gravity: 0.1,
+  wind: 0.1
 };
 exports.INITIAL_VALUES = INITIAL_VALUES;
 
@@ -740,8 +796,8 @@ var Field = /*#__PURE__*/function () {
     this.context = this.canvas.getContext('2d');
     this.particles = new Set();
     document.body.appendChild(this.canvas);
-    this.gravity = -0.1;
-    this.wind = 0;
+    this.gravity = _UI.INITIAL_VALUES.gravity;
+    this.wind = _UI.INITIAL_VALUES.wind;
     this.particleConfig = _objectSpread({}, _UI.INITIAL_VALUES);
     this.emitting = false;
   }
@@ -830,7 +886,6 @@ var _UI = require("./UI");
 
 /*
   get gravity/wind into one config called forces
-  lifespan 100 pauses spawning
   color?
   blur?
   animated favicon?
@@ -895,7 +950,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "50283" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "51135" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
