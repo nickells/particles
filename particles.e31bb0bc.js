@@ -821,13 +821,11 @@ var Field = /*#__PURE__*/function () {
       this.particles.forEach(function (particle) {
         particle.setGravity(_this2.gravity);
         particle.setWind(_this2.wind);
-      });
-
-      if (this.gravity === 0) {
-        this.stop();
-      } else if (!this.emitting) {
-        this.start();
-      }
+      }); // if (this.gravity === 0) {
+      //   this.stop()
+      // } else if (!this.emitting) {
+      //   this.start()
+      // }
     }
   }, {
     key: "addParticle",
@@ -849,10 +847,13 @@ var Field = /*#__PURE__*/function () {
       var _this4 = this;
 
       var startParticles = function startParticles() {
+        var yPosition;
+        if (_this4.gravity === 0) yPosition = -(Math.random() * _this4.canvas.height);else if (_this4.gravity > 0) yPosition = -(_this4.canvas.height - _this4.particleConfig.size);else if (_this4.gravity < 0) yPosition = 1;
+
         _this4.addParticle(new _Particle.Particle({
           startPosition: {
             x: Math.random() * _this4.canvas.width,
-            y: _this4.gravity < 0 ? 1 : -(_this4.canvas.height - _this4.particleConfig.size)
+            y: yPosition
           }
         }));
 
@@ -950,7 +951,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "64734" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "58674" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
