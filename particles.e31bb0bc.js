@@ -791,10 +791,9 @@ var Field = /*#__PURE__*/function () {
     });
 
     this.canvas = document.createElement('canvas');
-    this.canvas.width = window.innerWidth * window.devicePixelRatio;
-    this.canvas.height = (window.innerHeight - document.getElementById('hud').getBoundingClientRect().height) * window.devicePixelRatio;
+    this.canvas.width = window.innerWidth;
+    this.canvas.height = window.innerHeight - document.getElementById('hud').getBoundingClientRect().height;
     this.context = this.canvas.getContext('2d');
-    this.context.scale(window.devicePixelRatio, window.devicePixelRatio);
     this.particles = new Set();
     document.body.appendChild(this.canvas);
     this.gravity = _UI.INITIAL_VALUES.gravity;
@@ -951,7 +950,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "51135" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "64734" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
