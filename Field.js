@@ -40,11 +40,11 @@ export class Field {
       particle.setWind(this.wind)
     })
 
-    if (this.gravity === 0) {
-      this.stop()
-    } else if (!this.emitting) {
-      this.start()
-    }
+    // if (this.gravity === 0) {
+    //   this.stop()
+    // } else if (!this.emitting) {
+    //   this.start()
+    // }
   }
 
   addParticle(particle) {
@@ -60,10 +60,15 @@ export class Field {
 
   start(){
     const startParticles = () => {
+      let yPosition;
+      if (this.gravity === 0) yPosition = -(Math.random() * this.canvas.height);
+      else if (this.gravity > 0) yPosition = -(this.canvas.height - this.particleConfig.size)
+      else if (this.gravity < 0) yPosition = 1
+
       this.addParticle(new Particle({
         startPosition: {
           x: Math.random() * this.canvas.width,
-          y: this.gravity < 0 ? 1 : -(this.canvas.height - this.particleConfig.size)
+          y: yPosition
         }
       }))
       const interval = 100 - this.particleConfig.intensity
