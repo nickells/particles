@@ -791,9 +791,10 @@ var Field = /*#__PURE__*/function () {
     });
 
     this.canvas = document.createElement('canvas');
-    this.canvas.width = window.innerWidth;
-    this.canvas.height = window.innerHeight - document.getElementById('hud').getBoundingClientRect().height;
+    this.canvas.width = window.innerWidth * window.devicePixelRatio;
+    this.canvas.height = (window.innerHeight - document.getElementById('hud').getBoundingClientRect().height) * window.devicePixelRatio;
     this.context = this.canvas.getContext('2d');
+    this.context.scale(window.devicePixelRatio, window.devicePixelRatio);
     this.particles = new Set();
     document.body.appendChild(this.canvas);
     this.gravity = _UI.INITIAL_VALUES.gravity;
