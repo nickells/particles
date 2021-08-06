@@ -4,13 +4,12 @@ import { INITIAL_VALUES } from "./UI"
 export class Field {
   constructor(){
     this.canvas = document.createElement('canvas')
-    this.canvas.width = window.innerWidth * window.devicePixelRatio;
-    this.canvas.height = (window.innerHeight - document.getElementById('hud').getBoundingClientRect().height) * window.devicePixelRatio
     this.context = this.canvas.getContext('2d')
-    this.context.scale(window.devicePixelRatio, window.devicePixelRatio)
-    this.particles = new Set()
     document.body.appendChild(this.canvas)
 
+    this.setRetinaDimensions()
+
+    this.particles = new Set()
     this.gravity = INITIAL_VALUES.gravity
     this.wind = INITIAL_VALUES.wind
     
@@ -18,6 +17,14 @@ export class Field {
 
     this.emitting = false
 
+  }
+
+  setRetinaDimensions(){
+    this.canvas.width = window.innerWidth * window.devicePixelRatio;
+    this.canvas.height = (window.innerHeight - document.getElementById('hud').getBoundingClientRect().height) * window.devicePixelRatio
+    this.context.scale(window.devicePixelRatio, window.devicePixelRatio)
+    this.canvas.style.width = window.innerWidth
+    this.canvas.style.height = window.innerHeight - document.getElementById('hud').getBoundingClientRect().height
   }
 
   update(timestamp){
@@ -64,8 +71,8 @@ export class Field {
     const startParticles = () => {
       this.addParticle(new Particle({
         startPosition: {
-          x: Math.random() * this.canvas.width,
-          y: this.gravity < 0 ? 1 : -(this.canvas.height - this.particleConfig.size)
+          x: Math.random() * this.canvas.width / window.devicePixelRatio,
+          y: this.gravity < 0 ? 1 : -((this.canvas.height / window.devicePixelRatio) - this.particleConfig.size)
         }
       }))
       const interval = 100 - this.particleConfig.intensity
@@ -77,8 +84,7 @@ export class Field {
   }
 
   onResize = () => {
-    this.canvas.width = window.innerWidth
-    this.canvas.height = window.innerHeight - document.getElementById('hud').getBoundingClientRect().height
+    this.setRetinaDimensions()
   }
 
   stop(){

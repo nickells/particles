@@ -114,7 +114,7 @@ export class Particle {
       this.destroy()
     }
     if (this.force.y < 0) {
-      if (this.position.y <= -canvas.height) {
+      if (this.position.y <= -(canvas.height / window.devicePixelRatio)) {
         this.destroy()
       }
     }
@@ -124,13 +124,13 @@ export class Particle {
       }
     }
     if (this.force.x >= 0) {
-      if (this.position.x >= canvas.width) {
+      if (this.position.x >= (canvas.width / window.devicePixelRatio)) {
         this.position.x = 0
       }
     }
     if (this.force.x < 0) {
       if (this.position.x <= 0) {
-        this.position.x = canvas.width
+        this.position.x = (canvas.width / window.devicePixelRatio)
       }
     }
   }
