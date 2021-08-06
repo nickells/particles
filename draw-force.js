@@ -1,9 +1,14 @@
+import { getClientCoords } from "./Knob"
+
 export class DrawForceController {
   constructor(canvasContext){
     this.canvasContext = canvasContext
     this.canvasContext.canvas.addEventListener('mousedown', this.onMouseDown)
     this.canvasContext.canvas.addEventListener('mouseup', this.onMouseUp)
     this.canvasContext.canvas.addEventListener('mousemove', this.onMouseMove)
+    this.canvasContext.canvas.addEventListener('touchstart', this.onMouseDown)
+    this.canvasContext.canvas.addEventListener('touchend', this.onMouseUp)
+    this.canvasContext.canvas.addEventListener('touchmove', this.onMouseMove)
 
     this.state = {
       down: false
@@ -17,15 +22,17 @@ export class DrawForceController {
   }
 
   onMouseDown = (e) => {
-    this.startPoint = {x: e.offsetX, y: e.offsetY}
-    this.endPoint = {x: e.offsetX, y: e.offsetY}
+    e.preventDefault();
+    const { x, y } = this.getCanvasCoords(e)
+    this.startPoint = {x, y}
+    this.endPoint = {x, y}
     this.state.down = true
   }
   
   onMouseUp = (e) => {
+    e.preventDefault();
     if (!this.state.down) return
     this.state.down = false
-    this.endPoint = {x: e.offsetX, y: e.offsetY}
 
     this._onChange(
       this.endPoint.x - this.startPoint.x,
@@ -34,9 +41,18 @@ export class DrawForceController {
   }
 
   onMouseMove = (e) => {
+    e.preventDefault();
+    const { x, y } = this.getCanvasCoords(e)
     if (this.state.down) {
-      this.endPoint = {x: e.offsetX, y: e.offsetY}
+      this.endPoint = {x, y}
     }
+  }
+
+  getCanvasCoords = (e) => {
+    const {x: canvasX, y: canvasY} = getClientCoords(e);
+    const x = canvasX - e.target.offsetLeft
+    const y = canvasY - e.target.offsetTop
+    return {x, y}
   }
 
   update() {

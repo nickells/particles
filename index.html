@@ -17,6 +17,7 @@
       justify-content: space-around;
       border-bottom: 1px solid #DDD;
       padding-bottom: 20px;
+      flex-wrap: wrap;
     }
 
     .knob-container {
@@ -26,7 +27,16 @@
       justify-content: space-between;
       height: 100px;
     }
+    @media only screen and (max-width: 640px) {
+      #hud {
+        height: 300px;
+      }
+      .knob-container {
+        width: 50%;
+      }
+    }
   </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="./knob-styles.css">
 <body>
   <section id="hud">

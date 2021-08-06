@@ -23,12 +23,14 @@ const toDegrees = radian => radian * (180 / Math.PI)
 
 const toRadians = degree => degree * (Math.PI / 180)
 
-function getCoord(evt) {
-  return val => {
-    let coord = val === 'X' ? 'clientX' : 'clientY'
-    return HAS_TOUCH ? evt.touches[0][coord] : evt[coord]
+export function getClientCoords(evt) {
+  return HAS_TOUCH ? {
+    x: evt.touches[0].clientX,
+    y: evt.touches[0].clientY,
+  } : {
+    x: evt.clientX,
+    y: evt.clientY,
   }
-  // switch to screen if parent has unknown width?
 }
 
 function within(val, min, max) {
@@ -156,22 +158,21 @@ function Knob({ selector: elem, notches: notchesCount, min = 0, max = 100, deadA
   }
 
   function onMove(e) {
-    const getCoordForElement = getCoord(e)
     e.preventDefault()
     if (active) {
+      const {x, y} = getClientCoords(e)
       const center = {
         x: spinner.offsetLeft + spinner.offsetWidth / 2,
         y: spinner.offsetTop + spinner.offsetHeight / 2
       }
-      let diffX = getCoordForElement('X') - center.x
-      let diffY = center.y - getCoordForElement('Y') // because Y is upside down from regular math
+      let diffX = x - center.x
+      let diffY = center.y - y // because Y is upside down from regular math
       let arctan = Math.atan2(diffY, diffX)
       let deg = (toDegrees(arctan) + 360) % 360
       let roundDeg = nearestFromSet(deg, degreesSet)
       if (Math.abs(roundDeg) === Math.abs(lastDeg)) return
       else {
         rotate(roundDeg)
-        navigator.vibrate && navigator.vibrate([50])
         _onChange(degreeToValue(roundDeg, DEGREES_DEAD_AREA, min, max))
       }
     }
@@ -186,13 +187,34 @@ function Knob({ selector: elem, notches: notchesCount, min = 0, max = 100, deadA
     }
   }
 
-  spinner.addEventListener('mousedown', onGrab, false)
-  spinner.addEventListener('mousedown', onGrab, false)
-  spinner.addEventListener('touchstart', onGrab, false)
-  window.addEventListener('mouseup', onRelease, false)
-  window.addEventListener('touchend', onRelease, false)
-  window.addEventListener('mousemove', onMove, false)
-  window.addEventListener('touchmove', onMove, false)
+  spinner.addEventListener('mousedown', onGrab, {
+    passive: false,
+    bubbles: false
+  })
+  spinner.addEventListener('mousedown', onGrab, {
+    passive: false,
+    bubbles: false
+  })
+  spinner.addEventListener('touchstart', onGrab, {
+    passive: false,
+    bubbles: false
+  })
+  window.addEventListener('mouseup', onRelease, {
+    passive: false,
+    bubbles: false
+  })
+  window.addEventListener('touchend', onRelease, {
+    passive: false,
+    bubbles: false
+  })
+  window.addEventListener('mousemove', onMove, {
+    passive: false,
+    bubbles: false
+  })
+  window.addEventListener('touchmove', onMove, {
+    passive: false,
+    bubbles: false
+  })
 
   return {
     setValue(val) {

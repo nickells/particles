@@ -3,10 +3,10 @@ import Knob from "./Knob"
 export const INITIAL_VALUES = {
   lifespan: 1620,
   autonomy: 1,
-  size: 5,
+  size: 3,
   intensity: 100,
-  gravity: -0.1,
-  wind: 0,
+  gravity: 0.1,
+  wind: 0.1,
 }
 
 export const init = (fieldInstance) => {

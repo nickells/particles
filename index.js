@@ -1,6 +1,5 @@
 /*
   get gravity/wind into one config called forces
-  lifespan 100 pauses spawning
   color?
   blur?
   animated favicon?

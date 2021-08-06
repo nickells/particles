@@ -10,8 +10,8 @@ export class Field {
     this.particles = new Set()
     document.body.appendChild(this.canvas)
 
-    this.gravity = -0.1
-    this.wind = 0
+    this.gravity = INITIAL_VALUES.gravity
+    this.wind = INITIAL_VALUES.wind
     
     this.particleConfig = { ...INITIAL_VALUES }
 
